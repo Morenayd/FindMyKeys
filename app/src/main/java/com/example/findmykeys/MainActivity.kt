@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
+import android.os.ParcelUuid
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
@@ -18,11 +19,7 @@ import java.util.*
 class MainActivity : AppCompatActivity() {
 
     companion object {
-        private val uuid:UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
         var bluetoothSocket:BluetoothSocket? = null
-        lateinit var progressBar:ProgressDialog
-        lateinit var bluetoothAdapter: BluetoothAdapter
-        lateinit var address:String
         var isConnected: Boolean = false
         var status: Boolean = false
     }
@@ -30,9 +27,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        address = intent.getStringExtra(SelectDeviceActivity.EXTRA_ADDRESS)
-
-        ConnectToDevice(this).execute()
         find_my_keys.setOnClickListener {
             if(!status) {
                 status = true
@@ -78,46 +72,4 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
-
-    private class ConnectToDevice(c:Context):AsyncTask<Void, Void, String>() {
-        private var connected: Boolean = true
-        private val context: Context
-
-        init {
-            context = c
-        }
-
-        override fun onPreExecute() {
-            super.onPreExecute()
-            progressBar = ProgressDialog.show(context, "Connecting....", "Please wait")
-        }
-
-        override fun onPostExecute(result: String?) {
-            super.onPostExecute(result)
-            if(!connected) {
-                Log.i("Data", "Could not connect")
-            } else {
-                connected = true
-            }
-            progressBar.dismiss()
-        }
-
-        override fun doInBackground(vararg params: Void?): String? {
-            try {
-                if (bluetoothSocket == null || !isConnected) {
-                    bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
-                    val device: BluetoothDevice = bluetoothAdapter.getRemoteDevice(address)
-                    bluetoothSocket = device.createInsecureRfcommSocketToServiceRecord(uuid)
-                    BluetoothAdapter.getDefaultAdapter().cancelDiscovery()
-                    bluetoothSocket!!.connect()
-                }
-                } catch (e: IOException) {
-                connected = false
-                e.printStackTrace()
-            }
-            return null
-            }
-
-    }
-
 }

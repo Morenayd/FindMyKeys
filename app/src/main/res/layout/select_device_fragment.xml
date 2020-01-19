@@ -21,11 +21,15 @@
         android:id="@+id/refresh_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:background="@drawable/button_background"
+        android:fontFamily="monospace"
+        android:padding="16dp"
         android:text="Refresh"
+        android:textSize="18sp"
+        android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/button_background"/>
         app:layout_constraintTop_toBottomOf="@id/select_device_list" />
 </androidx.constraintlayout.widget.ConstraintLayout>
